@@ -1,0 +1,15 @@
+db.games.insertOne({
+    name: 'DataQuest',
+    num_players: 7,
+    level: 10,
+    violence: 2
+  })
+
+
+  db.games.insertOne({
+    name: 'Dragon Wars',
+    num_players: 12,
+    level: 4,
+    violence: 6
+  }
+
