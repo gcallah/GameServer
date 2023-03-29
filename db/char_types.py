@@ -1,6 +1,7 @@
 """
 This module encapsulates details about character type.
 """
+import db.db_connect as dbc
 
 WIZARD = 'Wizard'
 WARRIOR = 'Warrior'
@@ -9,6 +10,9 @@ MAGE = 'Mage'
 char_types = {WIZARD: {'health': 7, 'magic': 10},
               WARRIOR: {'health': 9, 'strength': 9},
               MAGE: {'health': 6}, }
+
+CHAR_TYPES_KEY = 'name'
+CHAR_TYPES_COLLECT = 'char_types'
 
 
 def add_char_type(type_name, traits):
@@ -28,16 +32,17 @@ def char_type_exists(type_name):
 
 def get_char_type_dict():
     """
-    Returns a list of character types.
+    Returns a dictionary of character types.
     """
-    return char_types
+    dbc.connect_db()
+    return dbc.fetch_all_as_dict(CHAR_TYPES_KEY, CHAR_TYPES_COLLECT)
 
 
 def get_char_types():
     """
     Returns a list of character types.
     """
-    return list(char_types.keys())
+    return list(get_char_type_dict().keys())
 
 
 def get_char_type_details(char_type):

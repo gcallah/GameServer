@@ -15,10 +15,7 @@ MONGO_ID = '_id'
 def connect_db():
     """
     This provides a uniform way to connect to the DB across all uses.
-    Returns a mongo client object... maybe we shouldn't?
     Also set global client variable.
-    We should probably either return a client OR set a
-    client global.
     """
     global client
     if client is None:  # not connected yet!

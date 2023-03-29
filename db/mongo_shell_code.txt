@@ -11,5 +11,10 @@ db.games.insertOne({
     num_players: 12,
     level: 4,
     violence: 6
-  }
+  })
 
+  db.char_types.insertOne({name: 'Wizard', 'health': 7, 'magic': 10})
+  db.char_types.insertOne({name: 'Warrior', 'health': 9, 'magic': 0})
+  db.char_types.insertOne({name: 'Mage', 'health': 6, magic: 8})
+
+  db.char_types.insertOne({name: 'Elf', 'health': 10, magic: 4, archery: 8})
