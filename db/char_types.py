@@ -52,6 +52,7 @@ def get_char_type_details(char_type):
 def main():
     char_types = get_char_types()
     print(char_types)
+    return
 
 
 if __name__ == '__main__':

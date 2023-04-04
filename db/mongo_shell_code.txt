@@ -6,15 +6,40 @@ db.games.insertOne({
   })
 
 
-  db.games.insertOne({
-    name: 'Dragon Wars',
-    num_players: 12,
-    level: 4,
-    violence: 6
-  })
+db.games.insertOne({
+  name: 'Dragon Wars',
+  num_players: 12,
+  level: 4,
+  violence: 6
+})
 
-  db.char_types.insertOne({name: 'Wizard', 'health': 7, 'magic': 10})
-  db.char_types.insertOne({name: 'Warrior', 'health': 9, 'magic': 0})
-  db.char_types.insertOne({name: 'Mage', 'health': 6, magic: 8})
+db.char_types.insertOne({name: 'Wizard', 'health': 7, 'magic': 10})
+db.char_types.insertOne({name: 'Warrior', 'health': 9, 'magic': 0})
+db.char_types.insertOne({name: 'Mage', 'health': 6, magic: 8})
 
-  db.char_types.insertOne({name: 'Elf', 'health': 10, magic: 4, archery: 8})
+db.char_types.insertOne({name: 'Elf', 'health': 10, magic: 4, archery: 8})
+
+
+db.users.insertOne({
+  name: 'Test user',
+  email: 'x@y.com',
+  full_name: 'Porgy Tirebiter'
+})
+
+db.users.insertOne({
+  name: 'handle',
+  email: 'z@y.com',
+  full_name: 'Nick Danger'
+})
+
+db.users.insertOne({
+  name: 'Loki',
+  email: 'loki@asgard.com',
+  full_name: 'Loki Odinson'
+})
+
+db.users.insertOne({
+  name: 'ironman',
+  email: 'tony@avengers.com',
+  full_name: 'Tony Stark'
+})

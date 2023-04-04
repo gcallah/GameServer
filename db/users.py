@@ -1,6 +1,7 @@
 """
 This module encapsulates details about users.
 """
+import db.db_connect as dbc
 
 TEST_USER_NAME = 'Test user'
 NAME = 'name'
@@ -14,6 +15,8 @@ REQUIRED_FLDS = [EMAIL]
 users = {TEST_USER_NAME: {EMAIL: 'x@y.com', FULL_NAME: 'Porgy Tirebiter'},
          'handle': {EMAIL: 'z@y.com', FULL_NAME: 'Nick Danger'}}
 
+USERS_KEY = 'name'
+USERS_COLLECT = 'users'
 
 def user_exists(name):
     """
@@ -23,11 +26,18 @@ def user_exists(name):
 
 
 def get_users():
-    return list(users.keys())
+    """
+    Returns a list of users.
+    """
+    return list(get_users_dict().keys())
 
 
 def get_users_dict():
-    return users
+    """
+    Returns a dictionary of users.
+    """
+    dbc.connect_db()
+    return dbc.fetch_all_as_dict(USERS_KEY, USERS_COLLECT)
 
 
 def get_user_details(user):
