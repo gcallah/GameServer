@@ -44,6 +44,7 @@ def insert_one(collection, doc, db=GAME_DB):
     """
     Insert a single doc into collection.
     """
+    connect_db()
     print(f'{db=}')
     return client[db][collection].insert_one(doc)
 
@@ -52,6 +53,7 @@ def fetch_one(collection, filt, db=GAME_DB):
     """
     Find with a filter and return on the first doc found.
     """
+    connect_db()
     for doc in client[db][collection].find(filt):
         if MONGO_ID in doc:
             # Convert mongo ID to a string so it works as JSON
@@ -63,10 +65,12 @@ def del_one(collection, filt, db=GAME_DB):
     """
     Find with a filter and return on the first doc found.
     """
+    connect_db()
     client[db][collection].delete_one(filt)
 
 
 def fetch_all(collection, db=GAME_DB):
+    connect_db()
     ret = []
     for doc in client[db][collection].find():
         ret.append(doc)
@@ -74,6 +78,7 @@ def fetch_all(collection, db=GAME_DB):
 
 
 def fetch_all_as_dict(key, collection, db=GAME_DB):
+    connect_db()
     ret = {}
     for doc in client[db][collection].find():
         del doc[MONGO_ID]

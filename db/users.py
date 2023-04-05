@@ -18,6 +18,7 @@ users = {TEST_USER_NAME: {EMAIL: 'x@y.com', FULL_NAME: 'Porgy Tirebiter'},
 USERS_KEY = 'name'
 USERS_COLLECT = 'users'
 
+
 def user_exists(name):
     """
     Returns whether or not a user exists.

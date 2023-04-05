@@ -15,26 +15,36 @@ CHAR_TYPES_KEY = 'name'
 CHAR_TYPES_COLLECT = 'char_types'
 
 
-def add_char_type(type_name, traits):
-    if char_type_exists(type_name):
-        raise ValueError(f'Char type exists: {type_name=}')
-    char_types[type_name] = traits
+def add_char_type(name, traits):
+    if not isinstance(name, str):
+        raise TypeError(f'Wrong type for name: {type(name)=}')
+    if not isinstance(traits, dict):
+        raise TypeError(f'Wrong type for traits: {type(traits)=}')
+    # we want to check required fields here!
+    if exists(name):
+        raise ValueError(f'Char type exists: {name=}')
+    traits[CHAR_TYPES_KEY] = name
+    return dbc.insert_one(CHAR_TYPES_COLLECT, traits)
 
 
-def del_char_type(type_name):
-    if char_type_exists(type_name):
-        del char_types[type_name]
+def del_char_type(name):
+    # if exists(name):
+    #     del char_types[name]
+    return dbc.del_one(CHAR_TYPES_COLLECT, {CHAR_TYPES_KEY: name})
 
 
-def char_type_exists(type_name):
-    return type_name in char_types
+def get_char_type_details(char_type):
+    return dbc.fetch_one(CHAR_TYPES_COLLECT, {CHAR_TYPES_KEY: char_type})
+
+
+def exists(name):
+    return get_char_type_details(name) is not None
 
 
 def get_char_type_dict():
     """
     Returns a dictionary of character types.
     """
-    dbc.connect_db()
     return dbc.fetch_all_as_dict(CHAR_TYPES_KEY, CHAR_TYPES_COLLECT)
 
 
@@ -43,10 +53,6 @@ def get_char_types():
     Returns a list of character types.
     """
     return list(get_char_type_dict().keys())
-
-
-def get_char_type_details(char_type):
-    return char_types.get(char_type, None)
 
 
 def main():
