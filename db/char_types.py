@@ -7,9 +7,9 @@ WIZARD = 'Wizard'
 WARRIOR = 'Warrior'
 MAGE = 'Mage'
 
-char_types = {WIZARD: {'health': 7, 'magic': 10},
-              WARRIOR: {'health': 9, 'strength': 9},
-              MAGE: {'health': 6}, }
+# char_types = {WIZARD: {'health': 7, 'magic': 10},
+#               WARRIOR: {'health': 9, 'strength': 9},
+#               MAGE: {'health': 6}, }
 
 CHAR_TYPES_KEY = 'name'
 CHAR_TYPES_COLLECT = 'char_types'

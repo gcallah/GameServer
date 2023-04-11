@@ -12,18 +12,18 @@ FULL_NAME = 'full_name'
 # For now, we will consider EMAIL to be
 # our mandatory fields.
 REQUIRED_FLDS = [EMAIL]
-users = {TEST_USER_NAME: {EMAIL: 'x@y.com', FULL_NAME: 'Porgy Tirebiter'},
-         'handle': {EMAIL: 'z@y.com', FULL_NAME: 'Nick Danger'}}
+# users = {TEST_USER_NAME: {EMAIL: 'x@y.com', FULL_NAME: 'Porgy Tirebiter'},
+#          'handle': {EMAIL: 'z@y.com', FULL_NAME: 'Nick Danger'}}
 
 USERS_KEY = 'name'
 USERS_COLLECT = 'users'
-
 
 def user_exists(name):
     """
     Returns whether or not a user exists.
     """
-    return name in users
+    # return name in users
+    return get_user_details(name) is not None
 
 
 def get_users():
@@ -40,14 +40,11 @@ def get_users_dict():
     dbc.connect_db()
     return dbc.fetch_all_as_dict(USERS_KEY, USERS_COLLECT)
 
-
 def get_user_details(user):
-    return users.get(user, None)
-
+    return dbc.fetch_one(USERS_COLLECT, {USERS_KEY: user})
 
 def del_user(name):
-    del users[name]
-
+    return dbc.del_one(USERS_COLLECT, {USERS_KEY: name})
 
 def add_user(name, details):
     if not isinstance(name, str):
@@ -57,7 +54,10 @@ def add_user(name, details):
     for field in REQUIRED_FLDS:
         if field not in details:
             raise ValueError(f'Required {field=} missing from details.')
-    users[name] = details
+    if user_exists(name):
+        raise ValueError(f'Char type exists: {name=}')
+    details[USERS_KEY] = name
+    return dbc.insert_one(USERS_COLLECT, details)
 
 
 def main():
