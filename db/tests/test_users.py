@@ -23,7 +23,7 @@ def temp_user():
 @pytest.fixture(scope='function')
 def new_user():
     """
-    This is used to test deletion, so we don't delete the new character type at
+    This is used to test deletion, so we don't delete the user at
     the end of the fixture.
     """
     add_user_if_not_there(NEW_USER_NAME, DEF_DETAILS)
@@ -73,6 +73,6 @@ def test_user_exists(temp_user):
 def test_user_type_not_exists():
     assert not usr.user_exists('Some nonsense user name')
 
-def test_del_user(temp_user):
+def test_del_user(new_user):
     usr.del_user(NEW_USER_NAME)
     assert not usr.user_exists(NEW_USER_NAME)
