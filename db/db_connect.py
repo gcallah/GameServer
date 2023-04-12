@@ -66,7 +66,8 @@ def del_one(collection, filt, db=GAME_DB):
     Find with a filter and return on the first doc found.
     """
     connect_db()
-    client[db][collection].delete_one(filt)
+    result = client[db][collection].delete_one(filt)
+    return result.deleted_count
 
 
 def fetch_all(collection, db=GAME_DB):

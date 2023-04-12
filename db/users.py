@@ -18,6 +18,7 @@ REQUIRED_FLDS = [EMAIL]
 USERS_KEY = 'name'
 USERS_COLLECT = 'users'
 
+
 def user_exists(name):
     """
     Returns whether or not a user exists.
@@ -40,11 +41,14 @@ def get_users_dict():
     dbc.connect_db()
     return dbc.fetch_all_as_dict(USERS_KEY, USERS_COLLECT)
 
+
 def get_user_details(user):
     return dbc.fetch_one(USERS_COLLECT, {USERS_KEY: user})
 
+
 def del_user(name):
     return dbc.del_one(USERS_COLLECT, {USERS_KEY: name})
+
 
 def add_user(name, details):
     if not isinstance(name, str):

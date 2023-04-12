@@ -43,8 +43,10 @@ CHAR_TYPE_LIST_W_NS = f'{CHAR_TYPES_NS}/{LIST}'
 CHAR_TYPE_LIST_NM = f'{CHAR_TYPES_NS}_list'
 CHAR_TYPE_DETAILS = f'/{DETAILS}'
 CHAR_TYPE_DETAILS_W_NS = f'{CHAR_TYPES_NS}/{DETAILS}'
-CHAR_TYPE_ADD = f'/{CHAR_TYPES_NS}/{ADD}'
-CHAR_TYPE_DEL = f'{CHAR_TYPES_NS}/{DEL}'
+CHAR_TYPE_ADD = f'/{ADD}'
+CHAR_TYPE_ADD_W_NS = f'/{CHAR_TYPES_NS}/{ADD}'
+CHAR_TYPE_DEL = f'/{DEL}'
+CHAR_TYPE_DEL_W_NS = f'{CHAR_TYPES_NS}/{DEL}'
 GAME_DICT = f'/{DICT}'
 GAME_DICT_W_NS = f'{GAMES_NS}/{DICT}'
 GAME_DETAILS = f'/{DETAILS}'
@@ -95,7 +97,8 @@ class MainMenu(Resource):
                           'method': 'get', 'text': 'List Users'},
                     'X': {'text': 'Exit'},
                 }}
-    
+
+
 ctyp_fields = api.model('NewCharacterType', {
     "name": fields.String,
     "health": fields.Integer
@@ -104,6 +107,7 @@ ctyp_fields = api.model('NewCharacterType', {
 ctyp_name = api.model('DelCharacterType', {
     "name": fields.String
 })
+
 
 @char_types.route(CHAR_TYPE_LIST)
 class CharacterTypeList(Resource):
@@ -166,27 +170,28 @@ class CharacterTypeAdd(Resource):
         del request.json[ctyp.CHAR_TYPES_KEY]
         try:
             ctyp.add_char_type(name, request.json)
+            return {MESSAGE: f'{name} added to DB.'}
         except TypeError as e:
             raise wz.BadRequest(f'TypeError occurred: {str(e)}')
-        except ValueError as e: 
+        except ValueError as e:
             raise wz.BadRequest(f'ValueError occurred: {str(e)}')
 
 
-@char_types.route(f'{CHAR_TYPE_DEL}')
+@char_types.route(f'{CHAR_TYPE_DEL}/<name>')
 class CharacterTypeDel(Resource):
     """
     This will delete a character type.
     """
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
-    @api.expect(ctyp_name)
-    def delete(self):
+    def delete(self, name):
         """
         This will delete a character type.
         """
-        print(f'{request.json=}')
-        name = request.json[ctyp.CHAR_TYPES_KEY]
-        ctyp.del_char_type(name)
+        if ctyp.del_char_type(name):
+            return {MESSAGE: f'{name} removed from DB.'}
+        else:
+            raise wz.NotFound(f'{name} not found')
 
 
 @games.route(GAME_DICT)
@@ -273,6 +278,7 @@ class UserList(Resource):
         """
         return {USER_LIST_NM: usr.get_users()}
 
+
 user_fields = api.model('NewUser', {
     usr.NAME: fields.String,
     usr.EMAIL: fields.String,
@@ -298,6 +304,7 @@ class AddUser(Resource):
         name = request.json[usr.NAME]
         del request.json[usr.NAME]
         usr.add_user(name, request.json)
+
 
 @users.route(USER_DEL)
 class DelUser(Resource):

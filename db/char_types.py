@@ -7,10 +7,6 @@ WIZARD = 'Wizard'
 WARRIOR = 'Warrior'
 MAGE = 'Mage'
 
-# char_types = {WIZARD: {'health': 7, 'magic': 10},
-#               WARRIOR: {'health': 9, 'strength': 9},
-#               MAGE: {'health': 6}, }
-
 CHAR_TYPES_KEY = 'name'
 CHAR_TYPES_COLLECT = 'char_types'
 
@@ -28,8 +24,9 @@ def add_char_type(name, traits):
 
 
 def del_char_type(name):
-    # if exists(name):
-    #     del char_types[name]
+    """
+    We expect this function to return 0 if the character type doesn't exist.
+    """
     return dbc.del_one(CHAR_TYPES_COLLECT, {CHAR_TYPES_KEY: name})
 
 

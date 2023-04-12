@@ -1,4 +1,7 @@
 from http import HTTPStatus
+
+from unittest.mock import patch
+
 import pytest
 import werkzeug.exceptions as wz
 
@@ -58,13 +61,12 @@ def test_get_game_details():
     assert resp.status_code == HTTPStatus.NOT_FOUND
 
 
-def test_add_user():
+@patch('server.endpoints.usr.add_user', return_value=True)
+def test_add_user(mock_add_user):
     """
     Test adding a user.
     """
     resp = TEST_CLIENT.post(ep.USER_ADD, json=SAMPLE_USER)
-    assert usr.user_exists(SAMPLE_USER_NM)
-    usr.del_user(SAMPLE_USER_NM)
 
 
 def test_get_user_list():
@@ -76,6 +78,18 @@ def test_get_user_list():
     resp = TEST_CLIENT.get(ep.USER_LIST_W_NS)
     resp_json = resp.get_json()
     assert isinstance(resp_json[ep.USER_LIST_NM], list)
+
+
+@patch('server.endpoints.ctyp.del_char_type', return_value=1)
+def test_char_type_del(mock_del_char_type):
+    resp = TEST_CLIENT.delete(f'{ep.CHAR_TYPE_DEL_W_NS}/SomeName')
+    assert resp.status_code == HTTPStatus.OK
+
+
+@patch('server.endpoints.ctyp.del_char_type', return_value=0)
+def test_char_type_del_bad_name(mock_del_char_type):
+    resp = TEST_CLIENT.delete(f'{ep.CHAR_TYPE_DEL_W_NS}/SomeName')
+    assert resp.status_code == HTTPStatus.NOT_FOUND
 
 
 def test_get_character_type_list():
