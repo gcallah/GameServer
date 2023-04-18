@@ -35,6 +35,7 @@ MAIN_MENU = '/main_menu'
 MAIN_MENU_NM = 'Main Menu'
 HELLO = '/hello'
 MESSAGE = 'message'
+ADD_CHARACTER = 'add_character'
 CHAR_TYPE_DICT = f'/{DICT}'
 CHAR_TYPE_DICT_W_NS = f'{CHAR_TYPES_NS}/{DICT}'
 CHAR_TYPE_DICT_NM = f'{CHAR_TYPES_NS}_dict'
@@ -52,6 +53,7 @@ GAME_DICT_W_NS = f'{GAMES_NS}/{DICT}'
 GAME_DETAILS = f'/{DETAILS}'
 GAME_DETAILS_W_NS = f'{GAMES_NS}/{DETAILS}'
 GAME_ADD = f'/{GAMES_NS}/{ADD}'
+GAME_ADD_CHARACTER = f'/{ADD_CHARACTER}'
 USER_DICT = f'/{DICT}'
 USER_DICT_W_NS = f'{USERS_NS}/{DICT}'
 USER_DICT_NM = f'{USERS_NS}_dict'
@@ -172,9 +174,9 @@ class CharacterTypeAdd(Resource):
             ctyp.add_char_type(name, request.json)
             return {MESSAGE: f'{name} added to DB.'}
         except TypeError as e:
-            raise wz.BadRequest(f'TypeError occurred: {str(e)}')
+            raise wz.BadRequest(f'Error occurred: {str(e)}')
         except ValueError as e:
-            raise wz.BadRequest(f'ValueError occurred: {str(e)}')
+            raise wz.BadRequest(f'Error occurred: {str(e)}')
 
 
 @char_types.route(f'{CHAR_TYPE_DEL}/<name>')
@@ -229,6 +231,37 @@ class GameDetails(Resource):
             raise wz.NotFound(f'{game} not found.')
 
 
+add_char_fields = api.model('NewCharacter', {
+    'game_name': fields.String,
+    'char_name': fields.String,
+    'char_type': fields.String
+})
+
+
+@games.route(f'{GAME_ADD_CHARACTER}')
+class GameAddCharacter(Resource):
+    """
+    This will add an character to a game.
+    """
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
+    @api.expect(add_char_fields)
+    def post(self):
+        """
+        Add character to the game.
+        """
+        game_name = request.json['game_name']
+        char_name = request.json['char_name']
+        char_type = request.json['char_type']
+        try:
+            gm.add_characters(game_name, char_name, char_type)
+            return {MESSAGE: f'{char_name} added to {game_name}.'}
+        except TypeError as e:
+            raise wz.BadRequest(f'Error occurred: {str(e)}')
+        except ValueError as e:
+            raise wz.BadRequest(f'Error occurred: {str(e)}')
+
+
 game_fields = api.model('NewGame', {
     gm.NAME: fields.String,
     gm.NUM_PLAYERS: fields.Integer,
@@ -250,7 +283,13 @@ class AddGame(Resource):
         print(f'{request.json=}')
         name = request.json[gm.NAME]
         del request.json[gm.NAME]
-        gm.add_game(name, request.json)
+        try:
+            gm.add_game(name, request.json)
+            return {MESSAGE: f'{name} was added successfully.'}
+        except TypeError as e:
+            raise wz.BadRequest(f'Error occurred: {str(e)}')
+        except ValueError as e:
+            raise wz.BadRequest(f'Error occurred: {str(e)}')
 
 
 @users.route(USER_DICT)
@@ -303,7 +342,13 @@ class AddUser(Resource):
         print(f'{request.json=}')
         name = request.json[usr.NAME]
         del request.json[usr.NAME]
-        usr.add_user(name, request.json)
+        try:
+            usr.add_user(name, request.json)
+            return {MESSAGE: f'{name} was added successfully.'}
+        except TypeError as e:
+            raise wz.BadRequest(f'Error occurred: {str(e)}')
+        except ValueError as e:
+            raise wz.BadRequest(f'Error occurred: {str(e)}')
 
 
 @users.route(USER_DEL)
@@ -318,7 +363,13 @@ class DelUser(Resource):
         """
         print(f'{request.json=}')
         name = request.json[usr.USERS_KEY]
-        usr.del_user(name)
+        try:
+            usr.del_user(name)
+            return {MESSAGE: f'{name} was deleted successfully.'}
+        except TypeError as e:
+            raise wz.BadRequest(f'Error occurred: {str(e)}')
+        except ValueError as e:
+            raise wz.BadRequest(f'Error occurred: {str(e)}')
 
 
 @api.route('/endpoints')

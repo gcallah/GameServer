@@ -85,3 +85,17 @@ def fetch_all_as_dict(key, collection, db=GAME_DB):
         del doc[MONGO_ID]
         ret[doc[key]] = doc
     return ret
+
+
+def append_to_list(collection, filt_nm, filt_val,
+                   list_nm, new_list_item, db=GAME_DB):
+    """
+    Retrieve documents with a filter and then append
+    new item to the field specified.
+    """
+    connect_db()
+    return client[db][collection].update_one(
+        {filt_nm: filt_val},
+        {'$push': {list_nm: new_list_item}},
+        upsert=True
+    )

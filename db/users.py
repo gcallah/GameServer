@@ -47,6 +47,10 @@ def get_user_details(user):
 
 
 def del_user(name):
+    if not isinstance(name, str):
+        raise TypeError(f'Wrong type for name: {type(name)=}')
+    if not user_exists(name):
+        raise ValueError(f'User does not exist: {name=}')
     return dbc.del_one(USERS_COLLECT, {USERS_KEY: name})
 
 
@@ -59,7 +63,7 @@ def add_user(name, details):
         if field not in details:
             raise ValueError(f'Required {field=} missing from details.')
     if user_exists(name):
-        raise ValueError(f'Char type exists: {name=}')
+        raise ValueError(f'User exists: {name=}')
     details[USERS_KEY] = name
     return dbc.insert_one(USERS_COLLECT, details)
 
