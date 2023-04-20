@@ -85,8 +85,8 @@ def test_add_user(mock_add_user):
     resp = TEST_CLIENT.post(ep.USER_ADD, json=SAMPLE_USER)
 
 
-# @patch('server.endpoints.usr.get_users', return_value=False)
-def test_get_user_list():
+@patch('server.endpoints.usr.get_users', return_value=['Om', 'Yilin'])
+def test_get_user_list(mock_get_users):
     """
     See if we can get a user list properly.
     Return should look like:
@@ -95,6 +95,7 @@ def test_get_user_list():
     resp = TEST_CLIENT.get(ep.USER_LIST_W_NS)
     resp_json = resp.get_json()
     assert isinstance(resp_json[ep.USER_LIST_NM], list)
+    assert 'Om' in resp_json[ep.USER_LIST_NM]
 
 
 @patch('server.endpoints.ctyp.del_char_type', return_value=1)

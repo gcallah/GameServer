@@ -1,5 +1,5 @@
 API_DIR = server
-DB_DIR = db
+DB_DIR = gamedb
 REQ_DIR = .
 
 FORCE:
