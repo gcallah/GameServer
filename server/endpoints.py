@@ -8,9 +8,9 @@ from flask import Flask, request
 from flask_restx import Resource, Api, fields, Namespace
 import werkzeug.exceptions as wz
 
-import db.char_types as ctyp
-import db.games as gm
-import db.users as usr
+import gamedb.char_types as ctyp
+import gamedb.games as gm
+import gamedb.users as usr
 
 app = Flask(__name__)
 api = Api(app)

@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-import db.games as gm
+import gamedb.games as gm
 
 
 RUNNING_ON_CICD_SERVER = os.environ.get('CI', False)

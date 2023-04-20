@@ -4,8 +4,8 @@ from unittest.mock import patch
 
 import pytest
 
-import db.users as usr
-import db.games as gm
+import gamedb.users as usr
+import gamedb.games as gm
 
 import server.endpoints as ep
 

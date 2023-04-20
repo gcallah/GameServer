@@ -1,2 +1,2 @@
-PKG = db
+PKG = gamedb
 include ../common.mk

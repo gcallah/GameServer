@@ -4,7 +4,7 @@ import pymongo as pm
 
 import pytest
 
-import db.db_connect as dbc
+import gamedb.db_connect as dbc
 
 RUNNING_ON_CICD_SERVER = os.environ.get('CI', False)
 

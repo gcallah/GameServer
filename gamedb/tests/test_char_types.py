@@ -1,6 +1,6 @@
 import pytest
 
-import db.char_types as ctyp
+import gamedb.char_types as ctyp
 
 NEW_CHAR_TYPE = 'Test character type!'
 DEF_TRAITS = {'health': 7, 'magic': 10}

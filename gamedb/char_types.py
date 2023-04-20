@@ -1,7 +1,7 @@
 """
 This module encapsulates details about character type.
 """
-import db.db_connect as dbc
+import gamedb.db_connect as dbc
 
 WIZARD = 'Wizard'
 WARRIOR = 'Warrior'

@@ -1,6 +1,6 @@
 import pytest
 
-import db.users as usr
+import gamedb.users as usr
 
 NEW_USER_NAME = 'An absolutely unique username'
 DEF_DETAILS = {usr.EMAIL: 'ab@gmail.com', 

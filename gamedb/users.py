@@ -1,7 +1,7 @@
 """
 This module encapsulates details about users.
 """
-import db.db_connect as dbc
+import gamedb.db_connect as dbc
 
 TEST_USER_NAME = 'Test user'
 NAME = 'name'

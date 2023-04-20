@@ -1,8 +1,8 @@
 """
 This module encapsulates details about games.
 """
-import db.db_connect as dbc
-import db.char_types as ctyp
+import gamedb.db_connect as dbc
+import gamedb.char_types as ctyp
 
 TEST_GAME_NAME = 'Test game'
 NAME = 'name'
