@@ -10,6 +10,25 @@ NUM_PLAYERS = 'num_players'
 LEVEL = 'level'
 VIOLENCE = 'violence'
 
+TEST_CHAR_NAME = 'Test character'
+TEST_CHAR_TYPE = 'Warrior'
+
+TEST_MAP = {
+    'graph': {'test loc 1': ['test loc 2'], 'test loc 2': ['test loc 1']},
+    'locations': {
+        'test loc 1': {
+            'description': 'test location 1',
+            'actions': ['test item 1', 'test item 2']
+        },
+        'test loc 2': {
+            'description': 'test location 2',
+            'actions': ['test item 3', 'test item 4']
+        }
+    },
+    'start': 'test start location',
+    'current': 'test start location'
+}
+
 # We expect the game database to change frequently:
 # For now, we will consider NUM_PLAYERS and LEVEL to be
 # our mandatory fields.
@@ -20,6 +39,8 @@ GAMES_COLLECT = 'games'
 CHARACTER_KEY = 'characters'
 CHARACTER_NAME = 'name'
 CHARACTER_TYPE = 'type'
+
+MAP_KEY = 'map'
 
 
 def get_game_details(name):
@@ -34,7 +55,17 @@ def game_exists(name):
 
 
 def get_games_dict():
-    return dbc.fetch_all_as_dict(GAME_KEY, GAMES_COLLECT)
+    """
+    Returns a dictionary of games without revealing game characters.
+    """
+    # remove game characters from the dictionary
+    ret = dbc.fetch_all_as_dict(GAME_KEY, GAMES_COLLECT)
+    if ret is not None:
+        for game in ret:
+            if CHARACTER_KEY in ret[game]:
+                del ret[game][CHARACTER_KEY]
+                del ret[game][MAP_KEY]
+    return ret
 
 
 def get_games():
@@ -62,10 +93,10 @@ def add_characters(name, char_name, char_type):
     """
     This will add an character to the game specified.
     """
-    if not game_exists(name):
-        raise ValueError(f'{name} does not exist.')
     if not isinstance(char_name, str):
         raise TypeError(f'Wrong type for character name: {type(char_name)=}')
+    if not game_exists(name):
+        raise ValueError(f'{name} does not exist.')
     if not isinstance(char_type, str):
         raise TypeError(f'Wrong type for character type: {type(char_type)=}')
     if not ctyp.exists(char_type):
@@ -75,6 +106,75 @@ def add_characters(name, char_name, char_type):
                               CHARACTER_KEY,
                               {CHARACTER_NAME: char_name,
                                CHARACTER_TYPE: char_type})
+
+
+def del_characters(name, char_name):
+    """
+    This will delete an character from the game specified.
+    """
+    if not isinstance(char_name, str):
+        raise TypeError(f'Wrong type for character name: {type(char_name)=}')
+    if not game_exists(name):
+        raise ValueError(f'{name} does not exist.')
+    return dbc.pull_from_list(GAMES_COLLECT,
+                              GAME_KEY, name,
+                              CHARACTER_KEY,
+                              {CHARACTER_NAME: char_name})
+
+
+def game_character_exists(name, char_name):
+    """
+    Returns whether or not a character exists in a game.
+    """
+    ret = get_game_details(name)
+    if ret is None:
+        return False
+    if CHARACTER_KEY not in ret:
+        return False
+    characters = ret[CHARACTER_KEY]
+    return characters is not None and \
+        any(char[CHARACTER_NAME] == char_name for char in characters)
+
+
+def add_map(name, map):
+    """
+    This will add a map to the game specified.
+    """
+    if not game_exists(name):
+        raise ValueError(f'{name} does not exist.')
+    if not isinstance(map, dict):
+        raise TypeError(f'Wrong type for map: {type(map)=}')
+    if len(map['graph']) == 0 or \
+        len(map['locations']) == 0 or \
+            len(map['graph']) != len(map['locations']):
+        raise ValueError('Wrong value for map.')
+    for location in [*map['graph']]:
+        if location not in [*map['locations']]:
+            raise ValueError(f'{location} not in locations.')
+    return dbc.update_one(GAMES_COLLECT,
+                          {GAME_KEY: name},
+                          {'$set': {'map': map}})
+
+
+def del_map(name):
+    """
+    This will delete a map from the game specified.
+    """
+    if not game_exists(name):
+        raise ValueError(f'{name} does not exist.')
+    return dbc.update_one(GAMES_COLLECT,
+                          {GAME_KEY: name},
+                          {'$unset': {'map': ""}})
+
+
+def game_map_exists(name):
+    """
+    Returns whether or not a map exists in a game.
+    """
+    ret = get_game_details(name)
+    if ret is None:
+        return False
+    return 'map' in ret
 
 
 def main():

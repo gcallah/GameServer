@@ -87,6 +87,14 @@ def fetch_all_as_dict(key, collection, db=GAME_DB):
     return ret
 
 
+def update_one(collection, filt, update, db=GAME_DB):
+    """
+    Find with a filter and return on the first doc found.
+    """
+    connect_db()
+    return client[db][collection].update_one(filt, update)
+
+
 def append_to_list(collection, filt_nm, filt_val,
                    list_nm, new_list_item, db=GAME_DB):
     """
@@ -97,5 +105,19 @@ def append_to_list(collection, filt_nm, filt_val,
     return client[db][collection].update_one(
         {filt_nm: filt_val},
         {'$push': {list_nm: new_list_item}},
+        upsert=True
+    )
+
+
+def pull_from_list(collection, filt_nm, filt_val,
+                   list_nm, list_item, db=GAME_DB):
+    """
+    Retrieve documents with a filter and then pull
+    item from the field specified.
+    """
+    connect_db()
+    return client[db][collection].update_one(
+        {filt_nm: filt_val},
+        {'$pull': {list_nm: list_item}},
         upsert=True
     )

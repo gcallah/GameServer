@@ -12,6 +12,7 @@ import gamedb.char_types as ctyp
 import gamedb.games as gm
 import gamedb.users as usr
 
+
 app = Flask(__name__)
 api = Api(app)
 
@@ -36,6 +37,7 @@ MAIN_MENU_NM = 'Main Menu'
 HELLO = '/hello'
 MESSAGE = 'message'
 ADD_CHARACTER = 'add_character'
+ADD_MAP = 'add_map'
 CHAR_TYPE_DICT = f'/{DICT}'
 CHAR_TYPE_DICT_W_NS = f'{CHAR_TYPES_NS}/{DICT}'
 CHAR_TYPE_DICT_NM = f'{CHAR_TYPES_NS}_dict'
@@ -54,6 +56,9 @@ GAME_DETAILS = f'/{DETAILS}'
 GAME_DETAILS_W_NS = f'{GAMES_NS}/{DETAILS}'
 GAME_ADD = f'/{GAMES_NS}/{ADD}'
 GAME_ADD_CHARACTER = f'/{ADD_CHARACTER}'
+GAME_ADD_CHARACTER_W_NS = f'{GAMES_NS}/{ADD_CHARACTER}'
+GAME_ADD_MAP = f'/{ADD_MAP}'
+GAME_ADD_MAP_W_NS = f'{GAMES_NS}/{ADD_MAP}'
 USER_DICT = f'/{DICT}'
 USER_DICT_W_NS = f'{USERS_NS}/{DICT}'
 USER_DICT_NM = f'{USERS_NS}_dict'
@@ -62,7 +67,7 @@ USER_LIST_W_NS = f'{USERS_NS}/{LIST}'
 USER_LIST_NM = f'{USERS_NS}_list'
 USER_DETAILS = f'/{USERS_NS}/{DETAILS}'
 USER_ADD = f'/{USERS_NS}/{ADD}'
-USER_DEL = f'{USERS_NS}/{DEL}'
+USER_DEL = f'/{DEL}'
 
 
 @api.route(HELLO)
@@ -262,6 +267,34 @@ class GameAddCharacter(Resource):
             raise wz.BadRequest(f'Error occurred: {str(e)}')
 
 
+add_map_fields = api.model('NewMap', {
+    'game_name': fields.String,
+    'map': fields.Raw()
+})
+
+@games.route(f'{GAME_ADD_MAP}')
+class GameAddMap(Resource):
+    """
+    This will add map to a game.
+    """
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_FOUND, 'Not Found')
+    @api.expect(add_map_fields)
+    def post(self):
+        """
+        Add map to the game.
+        """
+        game_name = request.json['game_name']
+        map = request.json['map']
+        try:
+            gm.add_map(game_name, map)
+            return {MESSAGE: f'Map is added to {game_name}.'}
+        except TypeError as e:
+            raise wz.BadRequest(f'Error occurred: {str(e)}')
+        except ValueError as e:
+            raise wz.BadRequest(f'Error occurred: {str(e)}')
+
+
 game_fields = api.model('NewGame', {
     gm.NAME: fields.String,
     gm.NUM_PLAYERS: fields.Integer,
@@ -329,7 +362,7 @@ user_name = api.model('DelUser', {
 })
 
 
-@users.route(USER_ADD)
+@api.route(USER_ADD)
 class AddUser(Resource):
     """
     Add a user.

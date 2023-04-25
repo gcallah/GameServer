@@ -65,8 +65,8 @@ def test_add_wrong_name_type():
 
 
 def test_add_wrong_details_type():
-        with pytest.raises(TypeError):
-            gm.add_game('a new game', [])
+    with pytest.raises(TypeError):
+        gm.add_game('a new game', [])
 
 
 def test_add_missing_field():
@@ -78,3 +78,85 @@ def test_add_game():
     gm.add_game(gm.TEST_GAME_NAME, create_game_details())
     assert gm.game_exists(gm.TEST_GAME_NAME)
     gm.del_game(gm.TEST_GAME_NAME)
+
+
+@pytest.fixture(scope='function')
+def temp_game_character(temp_game):
+    gm.add_characters(gm.TEST_GAME_NAME, gm.TEST_CHAR_NAME, gm.TEST_CHAR_TYPE)
+    yield
+    gm.del_characters(gm.TEST_GAME_NAME, gm.TEST_CHAR_NAME)
+
+
+def test_game_character_exists(temp_game_character):
+    assert gm.game_character_exists(gm.TEST_GAME_NAME, gm.TEST_CHAR_NAME)
+
+
+def test_game_add_character_wrong_name_type(temp_game):
+    with pytest.raises(TypeError):
+        gm.add_characters(gm.TEST_GAME_NAME, 7, gm.TEST_CHAR_TYPE)
+
+
+def test_game_add_character_wrong_game_name():
+    with pytest.raises(ValueError):
+        gm.add_characters('Surely this is not a game name!', 
+                          gm.TEST_CHAR_NAME, gm.TEST_CHAR_TYPE)
+
+
+def test_game_add_character_wrong_char_type(temp_game):
+    with pytest.raises(ValueError):
+        gm.add_characters(gm.TEST_GAME_NAME, 
+                          gm.TEST_CHAR_NAME, 
+                          'Surely this is not a character type!')
+
+@pytest.fixture(scope='function')
+def temp_game_map(temp_game):
+    gm.add_map(gm.TEST_GAME_NAME, gm.TEST_MAP)
+    yield
+    gm.del_map(gm.TEST_GAME_NAME)
+
+
+def test_map_exists(temp_game_map):
+    assert gm.game_map_exists(gm.TEST_GAME_NAME)
+
+
+def test_add_map_wrong_game_name():
+    with pytest.raises(ValueError):
+        gm.add_map('Surely this is not a game name!', gm.TEST_MAP)
+
+
+def test_add_map_wrong_map_type(temp_game):
+    with pytest.raises(TypeError):
+        gm.add_map(gm.TEST_GAME_NAME, 7)
+
+
+def test_add_map_wrong_map(temp_game):
+    with pytest.raises(ValueError):
+        gm.add_map(gm.TEST_GAME_NAME, 
+        {
+            'graph': { 'a': ['b'], 'b': ['a'] },
+            'locations': {
+                'a': { 'description': 'a description', 'actions': ['test action'] }
+            },
+            'start': 'a',
+            'current': 'a'
+        })
+
+
+@pytest.fixture(scope='function')
+def new_game_character(temp_game):
+    return gm.add_characters(gm.TEST_GAME_NAME, gm.TEST_CHAR_NAME, gm.TEST_CHAR_TYPE)
+
+
+def test_del_game(new_game_character):
+    gm.del_characters(gm.TEST_GAME_NAME, gm.TEST_CHAR_NAME)
+    assert not gm.game_character_exists(gm.TEST_GAME_NAME, gm.TEST_CHAR_NAME)
+
+
+@pytest.fixture(scope='function')
+def new_game_map(temp_game):
+    return gm.add_map(gm.TEST_GAME_NAME, gm.TEST_MAP)
+
+
+def test_del_game(new_game_map):
+    gm.del_map(gm.TEST_GAME_NAME)
+    assert not gm.game_map_exists(gm.TEST_GAME_NAME)
