@@ -272,6 +272,7 @@ add_map_fields = api.model('NewMap', {
     'map': fields.Raw()
 })
 
+
 @games.route(f'{GAME_ADD_MAP}')
 class GameAddMap(Resource):
     """

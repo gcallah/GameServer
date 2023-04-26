@@ -61,10 +61,11 @@ def get_games_dict():
     # remove game characters from the dictionary
     ret = dbc.fetch_all_as_dict(GAME_KEY, GAMES_COLLECT)
     if ret is not None:
-        for game in ret:
-            if CHARACTER_KEY in ret[game]:
-                del ret[game][CHARACTER_KEY]
-                del ret[game][MAP_KEY]
+        for game in ret.values():
+            if CHARACTER_KEY in game:
+                del game[CHARACTER_KEY]
+            if MAP_KEY in game:
+                del game[MAP_KEY]
     return ret
 
 
