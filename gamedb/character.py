@@ -33,6 +33,12 @@ class Character():
     def get_node(self):
         return self.node
 
+    def get_detail_dict(self):
+        return self.details
+
+    def get_detail(self, detail_name):
+        return self.details[detail_name]
+
     def set_detail(self, detail_name, detail_value):
         if not isinstance(detail_name, str):
             raise TypeError(f'Bad type for ability_name: {type(detail_name)}')
@@ -57,11 +63,14 @@ def main():
 
     # Test Character
     ym = Character('ym', 'Wizard', courtyard)
-    print(ym.get_node().get_descr())
+    print('name: ', ym.get_name())
+    print('type: ', ym.get_char_type())
+    print('details: ', ym.get_detail_dict())
 
     # Test move
+    print('node: ', ym.get_node().get_descr())
     ym.move(fountain)
-    print(ym.get_node().get_descr())
+    print('node: ', ym.get_node().get_descr())
 
 
 if __name__ == '__main__':
