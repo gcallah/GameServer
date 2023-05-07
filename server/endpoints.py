@@ -259,7 +259,7 @@ class GameAddCharacter(Resource):
         char_name = request.json['char_name']
         char_type = request.json['char_type']
         try:
-            gm.add_characters(game_name, char_name, char_type)
+            gm.add_character(game_name, char_name, char_type)
             return {MESSAGE: f'{char_name} added to {game_name}.'}
         except TypeError as e:
             raise wz.BadRequest(f'Error occurred: {str(e)}')

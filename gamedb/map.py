@@ -16,6 +16,7 @@ def add(character, item):
     Add an item to a character.
     """
     print(f'{item} added to {character})')
+    character.add_item(item)
     return SUCCESS
 
 
@@ -24,6 +25,7 @@ def move(character, node):
     Moves a character to a node.
     """
     print(f'{character} moved to {node})')
+    character.move(node)
     return SUCCESS
 
 
@@ -44,6 +46,15 @@ class Node():
     def get_action_list(self):
         return list(self.actions.keys())
 
+    def get_action_menu(self):
+        act_list = list(self.actions.keys())
+        menu = '\n'
+        choice = 0
+        for action in act_list:
+            menu += f'{choice}. {action}\n'
+            choice += 1
+        return menu
+
     def perform_action(self, act_name, character):
         if act_name not in self.actions:
             raise ValueError(f'No such action: {act_name}')
@@ -55,3 +66,37 @@ class Node():
 class Map():
     def __init__(self):
         pass
+
+
+PICK_UP_SWORD = 'Pick up sword'
+GO_THROUGH_DOOR = 'Go through the door'
+
+
+other_location = Node('on a grassy field', {})
+
+
+ACTIONS = {
+    PICK_UP_SWORD: {
+        ACT_FUNC: add,
+        ACT_OBJ: 'sword',
+    },
+    GO_THROUGH_DOOR: {
+        ACT_FUNC: move,
+        ACT_OBJ: other_location,
+    },
+}
+
+
+location = Node('in a dark chamber. '
+                + 'There is a sword on the floor, and a door before you.',
+                ACTIONS)
+
+
+def main():
+    print(f'You are {location.get_descr()}')
+    print(f'Your choices are: {location.get_action_menu()}')
+    # Here we will take input and execute an action.
+
+
+if __name__ == '__main__':
+    main()

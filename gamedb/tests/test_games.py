@@ -82,9 +82,9 @@ def test_add_game():
 
 @pytest.fixture(scope='function')
 def temp_game_character(temp_game):
-    gm.add_characters(gm.TEST_GAME_NAME, gm.TEST_CHAR_NAME, gm.TEST_CHAR_TYPE)
+    gm.add_character(gm.TEST_GAME_NAME, gm.TEST_CHAR_NAME, gm.TEST_CHAR_TYPE)
     yield
-    gm.del_characters(gm.TEST_GAME_NAME, gm.TEST_CHAR_NAME)
+    gm.del_character(gm.TEST_GAME_NAME, gm.TEST_CHAR_NAME)
 
 
 def test_game_character_exists(temp_game_character):
@@ -93,20 +93,21 @@ def test_game_character_exists(temp_game_character):
 
 def test_game_add_character_wrong_name_type(temp_game):
     with pytest.raises(TypeError):
-        gm.add_characters(gm.TEST_GAME_NAME, 7, gm.TEST_CHAR_TYPE)
+        gm.add_character(gm.TEST_GAME_NAME, 7, gm.TEST_CHAR_TYPE)
 
 
 def test_game_add_character_wrong_game_name():
     with pytest.raises(ValueError):
-        gm.add_characters('Surely this is not a game name!', 
+        gm.add_character('Surely this is not a game name!', 
                           gm.TEST_CHAR_NAME, gm.TEST_CHAR_TYPE)
 
 
 def test_game_add_character_wrong_char_type(temp_game):
     with pytest.raises(ValueError):
-        gm.add_characters(gm.TEST_GAME_NAME, 
+        gm.add_character(gm.TEST_GAME_NAME, 
                           gm.TEST_CHAR_NAME, 
                           'Surely this is not a character type!')
+
 
 @pytest.fixture(scope='function')
 def temp_game_map(temp_game):
@@ -144,11 +145,11 @@ def test_add_map_wrong_map(temp_game):
 
 @pytest.fixture(scope='function')
 def new_game_character(temp_game):
-    return gm.add_characters(gm.TEST_GAME_NAME, gm.TEST_CHAR_NAME, gm.TEST_CHAR_TYPE)
+    return gm.add_character(gm.TEST_GAME_NAME, gm.TEST_CHAR_NAME, gm.TEST_CHAR_TYPE)
 
 
 def test_del_game(new_game_character):
-    gm.del_characters(gm.TEST_GAME_NAME, gm.TEST_CHAR_NAME)
+    gm.del_character(gm.TEST_GAME_NAME, gm.TEST_CHAR_NAME)
     assert not gm.game_character_exists(gm.TEST_GAME_NAME, gm.TEST_CHAR_NAME)
 
 

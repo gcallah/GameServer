@@ -88,7 +88,7 @@ def test_get_game_details_bad_name(mock_get_game_details):
     assert resp.status_code == HTTPStatus.NOT_FOUND
 
 
-@patch('server.endpoints.gm.add_characters', return_value=0)
+@patch('server.endpoints.gm.add_character', return_value=0)
 def test_add_game_character(mock_game_character):
     """
     Test adding a character to a game.
@@ -99,7 +99,7 @@ def test_add_game_character(mock_game_character):
     assert 'message' in resp_json
 
 
-@patch('server.endpoints.gm.add_characters',
+@patch('server.endpoints.gm.add_character',
        side_effect=ValueError('Bad name value'))
 def test_add_game_character_bad_name(mock_game_character):
     """

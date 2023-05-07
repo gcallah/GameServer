@@ -90,7 +90,7 @@ def del_game(name):
     return dbc.del_one(GAMES_COLLECT, {GAME_KEY: name})
 
 
-def add_characters(name, char_name, char_type):
+def add_character(name, char_name, char_type):
     """
     This will add an character to the game specified.
     """
@@ -109,7 +109,7 @@ def add_characters(name, char_name, char_type):
                                CHARACTER_TYPE: char_type})
 
 
-def del_characters(name, char_name):
+def del_character(name, char_name):
     """
     This will delete an character from the game specified.
     """
