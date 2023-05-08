@@ -1,5 +1,7 @@
 import os
 
+from unittest.mock import patch
+
 import pytest
 
 import gamedb.games as gm
@@ -80,9 +82,14 @@ def test_add_game():
     gm.del_game(gm.TEST_GAME_NAME)
 
 
+@patch('gamedb.char_types.exists', return_value=True)
+def add_char(mock_exists):
+    gm.add_character(gm.TEST_GAME_NAME, gm.TEST_CHAR_NAME, 'Lizard')  # gm.TEST_CHAR_TYPE)
+
+
 @pytest.fixture(scope='function')
 def temp_game_character(temp_game):
-    gm.add_character(gm.TEST_GAME_NAME, gm.TEST_CHAR_NAME, gm.TEST_CHAR_TYPE)
+    add_char()
     yield
     gm.del_character(gm.TEST_GAME_NAME, gm.TEST_CHAR_NAME)
 
@@ -98,14 +105,14 @@ def test_game_add_character_wrong_name_type(temp_game):
 
 def test_game_add_character_wrong_game_name():
     with pytest.raises(ValueError):
-        gm.add_character('Surely this is not a game name!', 
+        gm.add_character('Surely this is not a game name!',
                           gm.TEST_CHAR_NAME, gm.TEST_CHAR_TYPE)
 
 
 def test_game_add_character_wrong_char_type(temp_game):
     with pytest.raises(ValueError):
-        gm.add_character(gm.TEST_GAME_NAME, 
-                          gm.TEST_CHAR_NAME, 
+        gm.add_character(gm.TEST_GAME_NAME,
+                          gm.TEST_CHAR_NAME,
                           'Surely this is not a character type!')
 
 

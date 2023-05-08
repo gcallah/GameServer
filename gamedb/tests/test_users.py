@@ -68,7 +68,7 @@ def test_add_usr_dup(temp_user):
         usr.add_user(NEW_USER_NAME, DEF_DETAILS)
 
 def test_user_exists(temp_user):
-    return usr.user_exists(NEW_USER_NAME)
+    assert usr.user_exists(NEW_USER_NAME)
 
 def test_user_type_not_exists():
     assert not usr.user_exists('Some nonsense user name')
